@@ -18,43 +18,43 @@ app.get('/', function(req,res){
   res.send("working...")
 })
 app.listen(process.env.PORT || 5000 )
-const sendMessage = (btcPriceMessage) =>{
-    client.messages.create({
-          to: '14156848545',
-          from: '+18025232154',
-          body: `BTC: ${btcPriceMessage}`,
-        })
-        .then(console.log("message sent"));
-}
-const stockTracker = (btcLow, btcHigh) =>{rp(url)
-  .then(function(html){
-    let $ = cheerio.load(html)
-    let btcPriceMessage = $('.coin-price-large').text().substr(0,10)
-    let btcPrice = parseFloat($('.coin-price-large').text().substr(1,9))
-    console.log(btcPrice);
+// const sendMessage = (btcPriceMessage) =>{
+//     client.messages.create({
+//           to: '14156848545',
+//           from: '+18025232154',
+//           body: `BTC: ${btcPriceMessage}`,
+//         })
+//         .then(console.log("message sent"));
+// }
+// const stockTracker = (btcLow, btcHigh) =>{rp(url)
+//   .then(function(html){
+//     let $ = cheerio.load(html)
+//     let btcPriceMessage = $('.coin-price-large').text().substr(0,10)
+//     let btcPrice = parseFloat($('.coin-price-large').text().substr(1,9))
+//     console.log(btcPrice);
     
-    if(btcPrice <= btcLow ){
-        sendMessage(`Bitcoin's price just dropped below $${btcLow} and is valued at: ${btcPriceMessage}`)
-    }
-    else if(btcPrice >= btcHigh){
-        sendMessage(`Bitcoin's price just rose above $${btcHigh} and is valued at: ${btcPriceMessage}`)
-    }
-    })
-  .catch(function(err){
-    //handle error
-    console.log(err)
-  });
-  setTimeout(stockTracker, 5000)
+//     if(btcPrice <= btcLow ){
+//         sendMessage(`Bitcoin's price just dropped below $${btcLow} and is valued at: ${btcPriceMessage}`)
+//     }
+//     else if(btcPrice >= btcHigh){
+//         sendMessage(`Bitcoin's price just rose above $${btcHigh} and is valued at: ${btcPriceMessage}`)
+//     }
+//     })
+//   .catch(function(err){
+//     //handle error
+//     console.log(err)
+//   });
+//   setTimeout(stockTracker, 5000)
 
-};
-readline.question('If BTC drops below $( ... ) notify me: ', btcLow => {
-    console.log(`Great, if BTC drops below $${btcLow} we'll notify you!`);
-    readline.question("If BTC goes up to $( ... ) notify me: ", btcHigh =>{
-    console.log(`Great, if BTC rises to $${btcHigh} we'll notify you!`);
-    stockTracker(btcLow, btcHigh);
-    readline.close();
+// };
+// readline.question('If BTC drops below $( ... ) notify me: ', btcLow => {
+//     console.log(`Great, if BTC drops below $${btcLow} we'll notify you!`);
+//     readline.question("If BTC goes up to $( ... ) notify me: ", btcHigh =>{
+//     console.log(`Great, if BTC rises to $${btcHigh} we'll notify you!`);
+//     stockTracker(btcLow, btcHigh);
+//     readline.close();
 
-    })
-    // readline.close();
+//     })
+//     // readline.close();
 
-});
+// });
