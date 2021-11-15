@@ -1,18 +1,18 @@
 const express = require('express')
 const app = express()
-const rp = require('request-promise');
-const cheerio = require('cheerio');
+// const rp = require('request-promise');
+// const cheerio = require('cheerio');
 require('dotenv').config();
-const url = 'https://www.livecoinwatch.com/price/Bitcoin-BTC';
-const readline = require('readline').createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
+// const url = 'https://www.livecoinwatch.com/price/Bitcoin-BTC';
+// const readline = require('readline').createInterface({
+//     input: process.stdin,
+//     output: process.stdout
+// });
 // twilio
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
+// const accountSid = process.env.TWILIO_ACCOUNT_SID;
+// const authToken = process.env.TWILIO_AUTH_TOKEN;
 // require the Twilio module and create a REST client
-const client = require('twilio')(accountSid, authToken);
+// const client = require('twilio')(accountSid, authToken);
 
 app.get('/', function(req,res){
   res.send("working...")
