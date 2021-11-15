@@ -4,7 +4,8 @@
   "description": "api that monitors a selected coin. the user chooses what low and high price their selected coin must hit before being notified via sms",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm start"
   },
   "repository": {
     "type": "git",
