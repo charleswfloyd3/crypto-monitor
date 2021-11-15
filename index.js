@@ -1,4 +1,5 @@
 const express = require('express')
+const app = express()
 const rp = require('request-promise');
 const cheerio = require('cheerio');
 require('dotenv').config();
@@ -13,8 +14,10 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 // require the Twilio module and create a REST client
 const client = require('twilio')(accountSid, authToken);
 
-
-
+app.get('/', function(req,res){
+  res.send("working...")
+})
+app.listen(process.env.PORT || 5000 )
 const sendMessage = (btcPriceMessage) =>{
     client.messages.create({
           to: '14156848545',
