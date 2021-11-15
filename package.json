@@ -1,0 +1,27 @@
+{
+  "name": "crypto-monitor",
+  "version": "1.0.0",
+  "description": "api that monitors a selected coin. the user chooses what low and high price their selected coin must hit before being notified via sms",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/charleswfloyd3/crypto-monitor.git"
+  },
+  "author": "charles floyd",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/charleswfloyd3/crypto-monitor/issues"
+  },
+  "homepage": "https://github.com/charleswfloyd3/crypto-monitor#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.10",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6",
+    "twilio": "^3.71.1"
+  }
+}
