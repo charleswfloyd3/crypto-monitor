@@ -41,7 +41,7 @@ const stockTracker = (btcLow, btcHigh) =>{rp(url)
     //handle error
     console.log(err)
   });
-  setTimeout(stockTracker, 10000)
+  setTimeout(stockTracker, 5000)
 
 };
 readline.question('If BTC drops below $( ... ) notify me: ', btcLow => {
