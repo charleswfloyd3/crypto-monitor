@@ -1,60 +1,100 @@
+//express server
 const express = require('express')
 const app = express()
+app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
+//requests for coin data
 const rp = require('request-promise');
 const cheerio = require('cheerio');
 require('dotenv').config();
-const url = 'https://www.livecoinwatch.com/price/Bitcoin-BTC';
-const readline = require('readline').createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
+
 // twilio
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
-// require the Twilio module and create a REST client
 const client = require('twilio')(accountSid, authToken);
+
 
 app.get('/', function(req,res){
   res.send("working...")
 })
-app.listen(process.env.PORT || 5000 )
-const sendMessage = (btcPriceMessage) =>{
-    client.messages.create({
-          to: '14156848545',
-          from: '+18025232154',
-          body: `BTC: ${btcPriceMessage}`,
-        })
-        .then(console.log("message sent"));
+app.get('/coinqueried', function(req,res){
+  res.send("coin page")
+})
+const sendMessage = (coinNotification, userPhonenumber) =>{
+  let messageStatus = "not sent"
+  try{
+    client.messages .create({ 
+      body:coinNotification,
+      from: '+18025232154',
+      to: '+14156848545', 
+
+    }) 
+   .then(messageStatus = 'already sent') 
+   .done();
+  }
+ catch{
+   console.log('erroe')
+ }
+return messageStatus;
+
 }
-const stockTracker = (btcLow, btcHigh) =>{rp(url)
-  .then(function(html){
-    let $ = cheerio.load(html)
-    let btcPriceMessage = $('.coin-price-large').text().substr(0,10)
-    let btcPrice = parseFloat($('.coin-price-large').text().substr(1,9))
-    console.log(btcPrice);
-    
-    if(btcPrice <= btcLow ){
-        sendMessage(`Bitcoin's price just dropped below $${btcLow} and is valued at: ${btcPriceMessage}`)
-    }
-    else if(btcPrice >= btcHigh){
-        sendMessage(`Bitcoin's price just rose above $${btcHigh} and is valued at: ${btcPriceMessage}`)
-    }
-    })
-  .catch(function(err){
-    //handle error
-    console.log(err)
-  });
-  setTimeout(stockTracker, 5000)
 
-};
-readline.question('If BTC drops below $( ... ) notify me: ', btcLow => {
-    console.log(`Great, if BTC drops below $${btcLow} we'll notify you!`);
-    readline.question("If BTC goes up to $( ... ) notify me: ", btcHigh =>{
-    console.log(`Great, if BTC rises to $${btcHigh} we'll notify you!`);
-    stockTracker(btcLow, btcHigh);
-    readline.close();
+app.post("/userparameters", async (req, res) =>{
+  try{
+      console.log("req.body: " , req.body);
+      const userParameters = ({
+          id: req.body.id,
+          symbol: req.body.symbol,
+          image: req.body.image,
+          highprice: req.body.highprice,
+          lowprice: req.body.lowprice,
+          fullname: req.body.name ,
+          phonenumber: req.body.phonenumber
+      });
+      let url = `https://www.livecoinwatch.com/price/${userParameters.fullname + userParameters.symbol}`
+     
+      const stockTracker = (userParameters, messageStatus) =>{
+        rp(url).then(function(html){
+          let $ = cheerio.load(html)
+          let coinPriceMessage = $('.coin-price-large').text().substr(0,9)
+          let coinPrice = parseFloat($('.coin-price-large').text().substr(1,9))
+          let coinLow = userParameters.lowprice
+          let coinHigh = userParameters.highprice
 
-    })
-    // readline.close();
+          console.log(coinPrice)
+          console.log(messageStatus)
+          if(messageStatus == 'message already sent'){
 
-});
+          }
+          else{
+          if(coinPrice <= coinLow ){
+              sendMessage(`${userParameters.fullname}'s price just dropped below $${coinLow} and is valued at: ${coinPriceMessage} ${url}`, userParameters.phonenumber);
+          }
+          else if(coinPrice >= coinHigh){
+              sendMessage(`${userParameters.fullname}'s price just rose above $${coinHigh} and is valued at: ${coinPriceMessage} ${url}`, userParameters.phonenumber)
+              
+          }
+        }
+          })
+
+        .catch(function(err){
+          //handle error
+          console.log(err)
+        });
+        
+      }; 
+      const loopStockTracker = () =>{
+        let messageSituation = sendMessage()
+        stockTracker(userParameters, messageSituation)
+
+        setTimeout(loopStockTracker, 5000)
+      }
+      loopStockTracker()
+  }
+  catch(error){
+      console.log(error)
+  }
+})
+app.listen(process.env.PORT || 5000 )
+
+
